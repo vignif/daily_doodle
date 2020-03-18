@@ -8,6 +8,7 @@ block double submit of same form
 	<?php
 	include('include/functions.php');
 	include('include/match.php');
+
 	?>
 	<title>Daily Doodle</title>
 
@@ -41,10 +42,16 @@ block double submit of same form
 					<?php
 					print_response();
 					?><br>
-
 				</div>
 			</div>
 		<?php } ?>
+
+		<?if (isset($sizeExceeded)){ ?>
+		<div class="panel panel-body panel-danger">
+				Filesize exceeded<br>
+		</div>
+	<?}?>
+
 		<div class="panel panel-primary">
 			<h4 style="text-align:center;" > <b>< Daily Doodle ></b> </h4>
 			<div class="panel-heading">  Schedule an Appointment</div>
@@ -99,6 +106,8 @@ block double submit of same form
 							</div>
 						</div>
 					</div>
+
+	 				<input hidden value="<?php $rand=rand();$_SESSION['rand']=$rand; echo $rand; ?>" name="randcheck" />
 					<input type="submit" class="btn btn-primary" value="Submit" name="insert">
 				</div>
 			</form>
@@ -121,7 +130,7 @@ block double submit of same form
 							</tr>
 							<?php
 							$i = 0;
-							foreach ($data_arr->data as $value) : ?>
+							foreach ($data_arr->data as $key => $value) : ?>
 							<tr>
 								<td hidden><? echo $i; ?> </td>
 								<td> <?php echo $value["name"]; ?> </td>
@@ -129,7 +138,9 @@ block double submit of same form
 								<td> <?php echo date("d/m/Y", strtotime($value["date"]));?> </td>
 								<td> <?php echo $value["from"]; ?> </td>
 								<td> <?php echo $value["to"]; ?> </td>
-								<td><form class="" action="index.php" method="post"><input type="submit" name="delete" value="<?echo $i++?>"/></form></td>
+								<td><form class="" action="index.php" method="post"><input type="submit" name="delete" value="<?echo $key?>"/>
+								<input hidden name="randcheck" id="randcheck" value="<?php echo microtime(); ?>" />
+								</form></td>
 								<!--	<td><input type="button" value="x" onclick="var id = deleteRow(this)"/></td> -->
 							</tr>
 						<?php endforeach; ?>

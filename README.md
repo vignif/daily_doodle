@@ -6,6 +6,7 @@ The other entries can only decide the time slot of availability.
 ## Implementation
 be: php, json
 fe: html, css
+max filesize 2000 bytes
 
 demo available:
 https://francescovigni.com/daily_doodle/index.php

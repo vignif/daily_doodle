@@ -1,5 +1,6 @@
 <?
 
+session_start();
 global $debug;
 $debug = false;
 
@@ -41,6 +42,7 @@ class Json_Obj{
   */
   public $data;
   private $N;
+  private $max = 100; //100 entries max
   public $debug =false;
   function __construct($data){
     $this->data = $data;
@@ -59,15 +61,11 @@ class Json_Obj{
   }
 
   function delete_all(){
-    for ($i=0; $i < $this->N; $i++){
+    for ($i=0; $i < $this->max; $i++){
       if($this->debug){ echo $i;}
       $this->remove($i);
     }
   }
-
-
-
-
 
   function show(){
 
@@ -135,13 +133,13 @@ if (isset($_POST['delAll'])){
     $del= true;
 }
 
-if (isset($_POST['delete'])){
+if (isset($_POST['delete']) && $_POST['randcheck']==$_SESSION['rand']){
   $id = $_POST['delete'];
   $data_arr->remove($id);
   $del= true;
 }
 
-if (isset($_POST['insert'])) {
+if (isset($_POST['insert']) && $_POST['randcheck']==$_SESSION['rand']) {
   $arr = array(
     'name'     => $_POST['name'],
     'email'    => $_POST['email'],
@@ -150,17 +148,30 @@ if (isset($_POST['insert'])) {
     'to'    => $_POST['to']
   );
   $data_arr->add($arr);
-  //insert to file
-      $insert = true;
+  $insert = true; //variable used in index.php
 }
 
 if (isset($insert) || isset($del)){
   $file->update($data_arr->data);
 }
 
+
+if (filesize($file->filename)>2000){
+  $data_arr->delete_all();
+  $file->update($data_arr->data);
+  $sizeExceeded = true;
+}
+
+
 $file = new File();
 $data = $file->json_decoded; //store array
 $data_arr = new Json_Obj($data); //create instance of Json_Obj with data from file
 
+// if (filesize($file->filename)>200){
+//   echo filesize($file->filename);
+//   $data_arr->delete_all();
+//   $del = true;
+// }
+//
 
 ?>
