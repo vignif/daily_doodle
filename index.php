@@ -76,12 +76,12 @@ block double submit of same form
 								<label class="control-label">Date </label>
 									<?if(isset($date0)){
 										?>
-										<input class="form-control" type="date" name="date" value=<?echo $date0;?> disabled>
+										<input class="form-control" type="date" name="date" value=<?echo $date0;?> disabled >
 										<input hidden type="date" name="date" value=<?echo $date0;?>>
 
 										<?
 									}else{?>
-									<input class="form-control" type="date" name="date" value=<?echo date("Y-m-d");?>>
+									<input class="form-control" type="date" name="date" value=<?echo date("Y-m-d");?> min="<?echo date("Y-m-d");?>" max="2020-12-31">
 									<?}?>
 							</div>
 						</div>
