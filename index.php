@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <!-- TODO
-delete entry from table and update json file
-format date
-fyx date of today
 insert minimum amount of time needed for meeting
 block double submit of same form
-adjust render of input date and hours
 -->
 <html>
 <head>
 	<?php
-	include('functions.php');
+	include('include/functions.php');
+	include('include/match.php');
 	?>
-	<title>Match date and time of Team</title>
+	<title>Daily Doodle</title>
 
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
@@ -49,15 +46,10 @@ adjust render of input date and hours
 			</div>
 		<?php } ?>
 		<div class="panel panel-primary">
-			<div class="panel-heading">Schedule an Appointment</div>
+			<h4 style="text-align:center;" > <b>< Daily Doodle ></b> </h4>
+			<div class="panel-heading">  Schedule an Appointment</div>
 			<div class="panel-body">
-
-				We need to find a time slot where we are all available to talk about out shit.
-				our meeting is going to last N hours
-
-				please insert here your name, and when you will be available within the next 7 days.
-				<br	>
-				<h4>The first entry is going to select the date, the others just have to select the time </h4>
+				<p>The first entry is going to select the date, the others just have to select the time </p>
 				Now:
 				<p id="date"></p>
 
@@ -74,10 +66,16 @@ adjust render of input date and hours
 						</div>
 						<div class='col-md-6'>
 							<div class="form-group">
-								<label class="control-label">Date</label>
-								<div class='input-group date'>
-									<input name ="date" type="date" value="<?	echo  date("d-m-Y", strtotime(date('Y-m-d'))); ?>"/>
-								</div>
+								<label class="control-label">Date </label>
+									<?if(isset($date0)){
+										?>
+										<input class="form-control" type="date" name="date" value=<?echo $date0;?> disabled>
+										<input hidden type="date" name="date" value=<?echo $date0;?>>
+
+										<?
+									}else{?>
+									<input class="form-control" type="date" name="date" value=<?echo date("Y-m-d");?>>
+									<?}?>
 							</div>
 						</div>
 					</div>
@@ -85,23 +83,19 @@ adjust render of input date and hours
 						<div class="col-md-6">
 							<div class="form-group">
 								<label class="control-label">Email</label>
-								<input type="text" class="form-control" name="email" id="email" required>
+								<input type="email" class="form-control" name="email" id="email" required>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label class="control-label">From</label>
-								<div class="input-group date">
-									<select name="from"><?php echo get_times('10:00'); ?></select>
-								</div>
+									<select class="form-control" name="from"><?php echo get_times('10:00'); ?></select>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label class="control-label">To</label>
-								<div class="input-group date">
-									<select name="to"><?php echo get_times('14:00'); ?></select>
-								</div>
+									<select class="form-control" name="to"><?php echo get_times('14:00'); ?></select>
 							</div>
 						</div>
 					</div>
@@ -113,7 +107,7 @@ adjust render of input date and hours
 			<div class="panel panel-primary">
 				<div class="panel-heading">Current Database</div>
 				<div class="panel-body">
-					Here is the list of the current entry in the file <b> <?print $file->filename;?></b> <?print $file->size();?>
+					Here is the list of the current entry in the file <b> <?print $file->filename;?></b>, number of entries: <?print $file->size();?>
 					<p id="showData"></p>
 					<table class="table">
 						<tbody>
@@ -132,7 +126,7 @@ adjust render of input date and hours
 								<td hidden><? echo $i; ?> </td>
 								<td> <?php echo $value["name"]; ?> </td>
 								<td> <?php echo $value["email"]; ?> </td>
-								<td> <?php echo $value["date"]; ?> </td>
+								<td> <?php echo date("d/m/Y", strtotime($value["date"]));?> </td>
 								<td> <?php echo $value["from"]; ?> </td>
 								<td> <?php echo $value["to"]; ?> </td>
 								<td><form class="" action="index.php" method="post"><input type="submit" name="delete" value="<?echo $i++?>"/></form></td>
@@ -141,16 +135,16 @@ adjust render of input date and hours
 						<?php endforeach; ?>
 					</tbody>
 				</table>
-
+<form class="" action="index.php" method="post">
 				<button type="button" class="btn btn-secondary" onClick="window.location.href=window.location.href">Reset</button>
-				<form class="btn" action="index.php" method="post">
+
 					<input type="submit" class="btn btn-secondary" name="delAll" value="Clear all entries">
 				</form>
 
 			</div>
 		</div>
 
-		<?include("match.php");?>
+
 		<div class="panel panel-primary">
 			<div class="panel-heading">Available solutions</div>
 			<div class="panel-body">
@@ -163,19 +157,24 @@ adjust render of input date and hours
 								<th>To</th>
 							</tr>
 							<tr>
-								<td><?echo $date0;?></td>
+								<td><?echo date("d/m/Y", strtotime($date0));?></td>
 								<td><?echo $fromMax;?></td>
 								<td><?echo $toMin;?></td>
 							</tr>
 						</table>
 						<?}else{?>
-							<h2>No possible match</h2>
+							<p>No possible match</p>
 							<?}?>
 						</div>
 			</div>
 
-
+			<footer >
+			<p class="panel panel-footer" style="color:grey; float:right; font-style:italic";>
+				The sourcecode of this project can be found in github <a href="https://github.com/vignif/daily_doodle">daily_doodle</a>
+			</p>
+			</footer>
 			</div>
+
 		</body>
-	<script type='text/javascript' src='script.js'></script>
+	<script type='text/javascript' src='include/script.js'></script>
 	</html>
