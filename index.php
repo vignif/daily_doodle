@@ -81,7 +81,7 @@ block double submit of same form
 
 										<?
 									}else{?>
-									<input class="form-control" type="date" name="date" value=<?echo date("Y-m-d");?> min="<?echo date("Y-m-d");?>" max="2020-12-31">
+									<input class="form-control" type="date" name="date" value=<?echo date("Y-m-d");?> min="<?echo date("Y-m-d");?>" max="<?echo date("Y")?>-12-31">
 									<?}?>
 							</div>
 						</div>
