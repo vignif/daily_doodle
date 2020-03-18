@@ -12,7 +12,7 @@ open -> decode
 work on decoded array
 encode -> save -> close
 */
-  public $filename = "db.json";
+  public $filename = "include/db.json";
   public $json_decoded;
   public $debug=false;
   function __construct(){
@@ -153,11 +153,14 @@ if (isset($_POST['insert'])) {
   //insert to file
       $insert = true;
 }
+
 if (isset($insert) || isset($del)){
   $file->update($data_arr->data);
 }
+
 $file = new File();
 $data = $file->json_decoded; //store array
 $data_arr = new Json_Obj($data); //create instance of Json_Obj with data from file
+
 
 ?>
